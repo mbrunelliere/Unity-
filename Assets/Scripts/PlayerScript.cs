@@ -7,9 +7,8 @@ public class PlayerScript : MonoBehaviour {
 
     bool _isGrounded = true;
     bool _isCrounching = false;
-    bool _islanding = false;
-    bool _isJumping = false;
-    bool _isFalling = false;
+    bool _isHurting = false;
+
 
     Animator animator;
     Bounds bounds;
@@ -32,7 +31,6 @@ public class PlayerScript : MonoBehaviour {
     {
         animator = this.GetComponent<Animator>();
         map = GameObject.FindWithTag("Map");
-        //bounds = map.GetComponent<SpriteRenderer>().sprite.bounds;
         bounds = map.GetComponent<Renderer>().bounds;
     }
 
@@ -40,13 +38,12 @@ public class PlayerScript : MonoBehaviour {
     void FixedUpdate() 
     {
         //Camera Movement
-        Camera cam = GetComponent<Camera>();
+        Camera cam = GetComponent<Camera>(); 
 
         float leftBound = bounds.min.x;
         float rightBound = bounds.max.x;
-        float bottomBound = bounds.min.y;
+        float bottomBound = bounds.min.y; 
         float topBound = bounds.max.y;
-        //Debug.Log(leftBound + " " + rightBound + " " + bottomBound + " " + topBound);
 
         float camX = Mathf.Clamp(transform.position.x, leftBound, rightBound);
         float camY = Mathf.Clamp(transform.position.y, bottomBound, topBound);
@@ -64,14 +61,14 @@ public class PlayerScript : MonoBehaviour {
         }
         else if (Input.GetKeyUp(KeyCode.Space))
         {
-            if (_isGrounded)
+            if (_isGrounded) 
             {
                 _isGrounded = false;
                 GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 250));
-                changeState(STATE_JUMP);
             }
+            changeState(STATE_JUMP);
         }
-        else if (Input.GetKey(KeyCode.RightArrow) && !_isCrounching)
+        else if (Input.GetKey(KeyCode.RightArrow) && !_isCrounching && !_isHurting)
         {
             changeDirection("right");
             transform.Translate(Vector3.right * walkSpeed * Time.fixedDeltaTime);
@@ -82,7 +79,7 @@ public class PlayerScript : MonoBehaviour {
             }
 
         }
-        else if (Input.GetKey(KeyCode.LeftArrow) && !_isCrounching )
+        else if (Input.GetKey(KeyCode.LeftArrow) && !_isCrounching && !_isHurting)
         {
             changeDirection("left");
             transform.Translate(Vector3.left * walkSpeed * Time.fixedDeltaTime);
@@ -99,13 +96,14 @@ public class PlayerScript : MonoBehaviour {
         else if (_isGrounded)
         {
             changeState(STATE_IDLE);
-        }
+        } 
         else if (!_isGrounded)
         {
             changeState(STATE_FALL);
         }
 
         _isCrounching = animator.GetCurrentAnimatorStateInfo(0).IsName("Patch_duck");
+        _isHurting = animator.GetCurrentAnimatorStateInfo(0).IsName("Patch_hurt");
     }
 
     void changeState(uint state)
@@ -121,17 +119,41 @@ public class PlayerScript : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        if (coll.gameObject.name == "Floor")
+        foreach (ContactPoint2D contact in coll.contacts)
         {
-            _isGrounded = true;
-            changeState(STATE_IDLE);
-            Debug.Log("une collision ...");
-        }
+            if (coll.gameObject.name == "Blade")
+            {
+                
+            }
 
-        if (coll.gameObject.name == "Ennemy")
-        {
-            GetComponent<Rigidbody2D>().AddForce(new Vector2(150, 150));
-            changeState(STATE_HURT);
+            if (coll.gameObject.name == "Floor")
+            {
+                _isGrounded = true;
+                changeState(STATE_IDLE);
+                //Debug.Log("une collision ...");
+            }
+
+            if (coll.gameObject.name == "Ennemy")
+            {
+                if(contact.normal == new Vector2(1, 0))
+                {
+                    GetComponent<Rigidbody2D>().AddForce(new Vector2(50, 100));
+                    changeState(STATE_HURT);
+                }
+                else if (contact.normal == new Vector2(-1, 0))
+                {
+                    GetComponent<Rigidbody2D>().AddForce(new Vector2(-50, 100));
+                    changeState(STATE_HURT);
+
+                }
+                
+                else if (contact.normal == new Vector2(0, -1))
+                {
+                    Debug.Log("mort ennemi"); 
+                    GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 50));
+                    changeState(STATE_JUMP);
+                }
+            }
         }
 
     }
