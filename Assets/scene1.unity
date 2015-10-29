@@ -1456,7 +1456,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1517537640}
-  - 114: {fileID: 1517537639}
   - 114: {fileID: 1517537638}
   - 82: {fileID: 1517537641}
   m_Layer: 0
@@ -1478,17 +1477,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SongTheme: {fileID: 0}
---- !u!114 &1517537639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1517537637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e36895d2f6dad8b428b8aebd8b71fa47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1517537640
 Transform:
   m_ObjectHideFlags: 0
