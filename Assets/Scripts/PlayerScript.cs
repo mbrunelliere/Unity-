@@ -24,7 +24,10 @@ public class PlayerScript : MonoBehaviour {
 
     string _currentDirection = "left";
     uint _currentAnimationState = STATE_IDLE;
-  
+
+    bool isCollected = true;
+    int jewels = 0;
+    UnityEngine.UI.Text jewelsTotalText;
 
     // Use this for initialization
     void Start()
@@ -32,23 +35,25 @@ public class PlayerScript : MonoBehaviour {
         animator = this.GetComponent<Animator>();
         map = GameObject.FindWithTag("Map");
         bounds = map.GetComponent<Renderer>().bounds;
+
+        jewelsTotalText = GameObject.Find("itemsNumber").GetComponent<UnityEngine.UI.Text>();
     }
 
     // Update is called once per frame
     void FixedUpdate() 
     {
         //Camera Movement
-        Camera cam = GetComponent<Camera>(); 
+        Camera cam = GetComponent<Camera>();
 
         float leftBound = bounds.min.x;
         float rightBound = bounds.max.x;
         float bottomBound = bounds.min.y; 
         float topBound = bounds.max.y;
 
-        float camX = Mathf.Clamp(transform.position.x, leftBound, rightBound);
-        float camY = Mathf.Clamp(transform.position.y, bottomBound, topBound);
+        float posX = Mathf.Clamp(transform.position.x, leftBound, rightBound);
+        float posY = Mathf.Clamp(transform.position.y, bottomBound, topBound);
 
-        cam.transform.position = new Vector3(camX, camY, cam.transform.position.z);
+        transform.position = new Vector3(posX, posY, transform.position.z);
 
 
         //Player Movement
@@ -71,6 +76,7 @@ public class PlayerScript : MonoBehaviour {
         else if (Input.GetKey(KeyCode.RightArrow) && !_isCrounching && !_isHurting)
         {
             changeDirection("right");
+            //GetComponent<Rigidbody2D>().velocity = Vector3.right * walkSpeed * Time.fixedDeltaTime;
             transform.Translate(Vector3.right * walkSpeed * Time.fixedDeltaTime);
 
             if (_isGrounded)
@@ -82,6 +88,7 @@ public class PlayerScript : MonoBehaviour {
         else if (Input.GetKey(KeyCode.LeftArrow) && !_isCrounching && !_isHurting)
         {
             changeDirection("left");
+            //GetComponent<Rigidbody2D>().velocity = Vector3.right * walkSpeed * Time.fixedDeltaTime;
             transform.Translate(Vector3.left * walkSpeed * Time.fixedDeltaTime);
 
             if (_isGrounded)
@@ -123,19 +130,18 @@ public class PlayerScript : MonoBehaviour {
         {
             if (coll.gameObject.name == "Blade")
             {
-                
+
             }
 
             if (coll.gameObject.name == "Floor")
             {
                 _isGrounded = true;
                 changeState(STATE_IDLE);
-                //Debug.Log("une collision ...");
             }
 
             if (coll.gameObject.name == "Ennemy")
             {
-                if(contact.normal == new Vector2(1, 0))
+                if (contact.normal == new Vector2(1, 0))
                 {
                     GetComponent<Rigidbody2D>().AddForce(new Vector2(50, 100));
                     changeState(STATE_HURT);
@@ -146,16 +152,29 @@ public class PlayerScript : MonoBehaviour {
                     changeState(STATE_HURT);
 
                 }
-                
+
                 else if (contact.normal == new Vector2(0, -1))
                 {
-                    Debug.Log("mort ennemi"); 
+                    Debug.Log("mort ennemi");
                     GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 50));
                     changeState(STATE_JUMP);
                 }
             }
+            if (coll.gameObject.name == "jewel") 
+            {
+                Destroy(coll.gameObject);
+                if(isCollected)
+                {
+                    isCollected = false;
+                    updateJewelsTotal();
+                    Debug.Log("une collision ...");
+                }
+            }
+            else
+            {
+                isCollected = true;
+            }
         }
-
     }
 
     void changeDirection(string direction)
@@ -174,5 +193,11 @@ public class PlayerScript : MonoBehaviour {
             transform.localScale = theScale;
             _currentDirection = direction;
         }
+    }
+
+    void updateJewelsTotal()
+    {
+        jewels++;
+        jewelsTotalText.text = "" + jewels + "";
     }
 }
