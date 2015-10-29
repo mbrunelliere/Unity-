@@ -21,6 +21,7 @@ public class PlayerScript : MonoBehaviour {
     const uint STATE_LAND = 4;
     const uint STATE_FALL = 5;
     const uint STATE_HURT = 6;
+    const uint STATE_DIE = 7;
 
     string _currentDirection = "left";
     uint _currentAnimationState = STATE_IDLE;
@@ -167,7 +168,6 @@ public class PlayerScript : MonoBehaviour {
                 {
                     isCollected = false;
                     updateJewelsTotal();
-                    Debug.Log("une collision ...");
                 }
             }
             else
