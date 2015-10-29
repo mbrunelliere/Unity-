@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerScript : MonoBehaviour {
 
     public float walkSpeed = 1;
+    public AudioClip walk; 
 
     bool _isGrounded = true;
     bool _isCrounching = false;
@@ -11,6 +12,7 @@ public class PlayerScript : MonoBehaviour {
 
 
     Animator animator;
+    AudioSource Audio;
     Bounds bounds;
     GameObject map;
 
@@ -33,6 +35,7 @@ public class PlayerScript : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        Audio = this.GetComponent<AudioSource>();
         animator = this.GetComponent<Animator>();
         map = GameObject.FindWithTag("Map");
         bounds = map.GetComponent<Renderer>().bounds;
@@ -83,6 +86,7 @@ public class PlayerScript : MonoBehaviour {
             if (_isGrounded)
             {
                 changeState(STATE_WALK);
+                Audio.PlayOneShot(walk, 0.7F);
             }
 
         }
@@ -200,4 +204,4 @@ public class PlayerScript : MonoBehaviour {
         jewels++;
         jewelsTotalText.text = "" + jewels + "";
     }
-}
+} 

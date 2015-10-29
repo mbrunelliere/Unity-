@@ -3,6 +3,9 @@ using System.Collections;
 
 public class GameSystem : MonoBehaviour {
 
+    public AudioClip SongTheme;
+
+    AudioSource Audio;
     GameObject trees;
     GameObject clouds;
     Vector3 trees_StartPosition;
@@ -13,6 +16,11 @@ public class GameSystem : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
+        //Manage song theme
+        Audio = this.GetComponent<AudioSource>();
+        Audio.PlayOneShot(SongTheme, 1F);
+
         //Select decors elements
         trees = GameObject.Find("bg_trees"); 
         clouds = GameObject.Find("bg_clouds");
