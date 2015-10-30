@@ -366,7 +366,6 @@ PlatformEffector2D:
   m_SurfaceArc: 0
   m_UseSideFriction: 0
   m_UseSideBounce: 0
-  m_SideArc: 0
 --- !u!4 &268896684
 Transform:
   m_ObjectHideFlags: 0
@@ -645,7 +644,6 @@ PlatformEffector2D:
   m_SurfaceArc: 0
   m_UseSideFriction: 0
   m_UseSideBounce: 0
-  m_SideArc: 0
 --- !u!4 &803315194
 Transform:
   m_ObjectHideFlags: 0
@@ -1456,9 +1454,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1517537640}
-  - 114: {fileID: 1517537639}
-  - 114: {fileID: 1517537638}
   - 82: {fileID: 1517537641}
+  - 114: {fileID: 1517537638}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -1477,18 +1474,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a61a94990fddf8d4197a91981aaa2bdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SongTheme: {fileID: 0}
---- !u!114 &1517537639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1517537637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e36895d2f6dad8b428b8aebd8b71fa47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  SongTheme: {fileID: 8300000, guid: a4409d63ba10da34b89e4f806bc27762, type: 3}
+  camera: {fileID: 779000452}
+  ParallaxDecors:
+  - {fileID: 1650952846}
+  - {fileID: 121030154}
+  - {fileID: 1397751928}
+  SpeedParallax: .200000003
+  RangeParallax: .200000003
 --- !u!4 &1517537640
 Transform:
   m_ObjectHideFlags: 0
