@@ -4,59 +4,69 @@ using System.Collections;
 public class ACharacter : MonoBehaviour {
 
     public float walkSpeed = 1;
-    bool _isGrounded = true;
-
-
+    public GameObject limitsUniverse;
+    Bounds bounds;
+    SpriteRenderer renderer;
+    Rigidbody2D rigidbody;
     Animator animator;
 
-    enum States {
-        idle = 0,
-        walk = 1,
-        jump = 2
-    };
+    bool _isGrounded = true;
 
-	string direction; 
-    string _currentDirection = "right";
-    uint _currentAnimationState = (uint)States.idle;
+    Color tmpColor;
 
     // Use this for initialization 
-    void Start()
-    {
+    public void Start()
+    { 
+        renderer = this.GetComponent<SpriteRenderer>();
+        rigidbody = this.GetComponent<Rigidbody2D>(); 
+        bounds = limitsUniverse.GetComponent<Renderer>().bounds;
         animator = this.GetComponent<Animator>();
     }
 
     // Update is called once per frame
-	void Update()
+	public void Update()
 	{
-		
-	}
+        //Keep the character in the universe
+        //checkLimits();
+    }
 
 	//Physics update
-	void FixedUpdate()
+	public void FixedUpdate()
     {
        
     }
 
-	//Todo getter / setter
-	/*public string Direction
-	{
-		get
-		{
-			return direction;
-		}
-		set
-		{
+    //Todo: DIE
+    public void GameOver(bool isDead)
+    {
+        animator.SetBool("isDead", isDead);
+        // Animation to Alpha 0
+        tmpColor = renderer.color;
+        renderer.color = Color.Lerp(tmpColor, new Color(0f, 0f, 0f, 0f), Time.fixedDeltaTime * 20.0f);
+        // Destruct gameObject
+        StartCoroutine(Destroy());
+    }
 
-		}
-	}*/
-	
-	//Todo: DIE
-	
-	//Todo: Move
+    IEnumerator Destroy()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
+    }
+      
+    //Todo: Move
+    public void move()
+    {
+        animator.SetBool("isWalking", true); 
+        rigidbody.velocity = new Vector2(walkSpeed * transform.localScale.x * Time.fixedDeltaTime, rigidbody.velocity.y);
+    }
 	
 	//Todo: Change direction
-	void changeDirection(string direction)
+	public void changeDirection()
 	{
-		
+            Vector3 theScale = transform.localScale;
+            theScale.x *= -1;
+            transform.localScale = theScale;
+            move();
     }
+
 }

@@ -27,7 +27,7 @@ public class camera : MonoBehaviour {
         float leftBound = bounds.min.x + 4 ;
         float rightBound = bounds.max.x - 4;
         float bottomBound = bounds.min.y + 1.8f; 
-        float topBound = bounds.max.y - 1.8f;
+        float topBound = bounds.max.y - 1.8f; 
           
         float camX = Mathf.Clamp(player.transform.position.x, leftBound, rightBound);
         float camY = Mathf.Clamp(player.transform.position.y, bottomBound , topBound);

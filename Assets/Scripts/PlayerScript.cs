@@ -33,6 +33,7 @@ public class PlayerScript : MonoBehaviour {
 	bool is_Jumping = false;
 	bool is_Falling = false;
     bool isCollected = true;
+    bool isHurted = true;
 
     int jewels = 0;
     UnityEngine.UI.Text jewelsTotalText;
@@ -126,6 +127,7 @@ public class PlayerScript : MonoBehaviour {
         _isCrounching = animator.GetCurrentAnimatorStateInfo(0).IsName("Patch_duck");
         _isHurting = animator.GetCurrentAnimatorStateInfo(0).IsName("Patch_hurt");
         isCollected = true;
+        isHurted = true;
     }
 
     void changeState(uint state)
@@ -143,8 +145,8 @@ public class PlayerScript : MonoBehaviour {
     {
         foreach (ContactPoint2D contact in coll.contacts)
         {
-			if (coll.gameObject.name == "Blade" || coll.gameObject.name == "Platform" || coll.gameObject.name == "Platform_Grotte" || coll.gameObject.name =="Crate" )
-            {
+			if (coll.gameObject.tag == "isClimbing") {
+            
 				_isGrounded = true;
             }
 
@@ -156,24 +158,28 @@ public class PlayerScript : MonoBehaviour {
 
             if (coll.gameObject.name == "Ennemy")
             {
-                if (contact.normal == new Vector2(1, 0))
-                {
-                    GetComponent<Rigidbody2D>().AddForce(new Vector2(50, 100));
-                    changeState(STATE_HURT);
-                    GameObject.Find("lifesNumber").SendMessage("updateCounter", 1);
-                }
-                else if (contact.normal == new Vector2(-1, 0))
-                {
-                    GetComponent<Rigidbody2D>().AddForce(new Vector2(-50, 100));
-                    changeState(STATE_HURT);
-                    GameObject.Find("lifesNumber").SendMessage("updateCounter", 1);
-                }
+                if (isHurted) {
+                    isHurted = false;
+                    if (contact.normal == new Vector2(1, 0))
+                    {
+                        GetComponent<Rigidbody2D>().AddForce(new Vector2(50, 100));
+                        changeState(STATE_HURT);
+                        GameObject.Find("lifesNumber").SendMessage("updateCounter", 1);
+                    }
+                    else if (contact.normal == new Vector2(-1, 0))
+                    {
+                        GetComponent<Rigidbody2D>().AddForce(new Vector2(-50, 100));
+                        changeState(STATE_HURT);
+                        GameObject.Find("lifesNumber").SendMessage("updateCounter", 1);
+                    }
 
-                else if (contact.normal == new Vector2(0, -1))
-                {
-                    Debug.Log("mort ennemi");
-                    GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 50));
-                    changeState(STATE_JUMP);
+                    else if (contact.normal == new Vector2(0, -1))
+                    {
+                        Debug.Log("mort ennemi");
+                        GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 50));
+                        changeState(STATE_JUMP);
+                        coll.gameObject.SendMessage("GameOver", true);   
+                    }
                 }
             }
             if (coll.gameObject.name == "jewel") 
@@ -187,7 +193,7 @@ public class PlayerScript : MonoBehaviour {
                 }
             }
         }
-    }
+    } 
 
     void changeDirection(string direction)
     {
