@@ -15,7 +15,7 @@ public class ACharacter : MonoBehaviour {
         jump = 2
     };
 
-
+	string direction; 
     string _currentDirection = "right";
     uint _currentAnimationState = (uint)States.idle;
 
@@ -37,13 +37,26 @@ public class ACharacter : MonoBehaviour {
        
     }
 
+	//Todo getter / setter
+	/*public string Direction
+	{
+		get
+		{
+			return direction;
+		}
+		set
+		{
+
+		}
+	}*/
+	
 	//Todo: DIE
-
+	
 	//Todo: Move
-
+	
 	//Todo: Change direction
-    void changeDirection(string direction)
-    {
-
+	void changeDirection(string direction)
+	{
+		
     }
 }

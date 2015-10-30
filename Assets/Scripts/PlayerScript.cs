@@ -29,7 +29,10 @@ public class PlayerScript : MonoBehaviour {
     string _currentDirection = "left";
     uint _currentAnimationState = STATE_IDLE;
 
+	bool is_Jumping = false;
+	bool is_Falling = false;
     bool isCollected = true;
+
     int jewels = 0;
     UnityEngine.UI.Text jewelsTotalText;
 
@@ -87,7 +90,7 @@ public class PlayerScript : MonoBehaviour {
             if (_isGrounded)
             {
                 changeState(STATE_WALK);
-                Audio.PlayOneShot(walk, 0.7F);
+                Audio.PlayOneShot(walk, 0.5F);
             }
 
         }
@@ -133,9 +136,9 @@ public class PlayerScript : MonoBehaviour {
     {
         foreach (ContactPoint2D contact in coll.contacts)
         {
-            if (coll.gameObject.name == "Blade")
+			if (coll.gameObject.name == "Blade" || coll.gameObject.name == "Platform" || coll.gameObject.name == "Platform_Grotte" || coll.gameObject.name =="Crate" )
             {
-
+				_isGrounded = true;
             }
 
             if (coll.gameObject.name == "Floor")

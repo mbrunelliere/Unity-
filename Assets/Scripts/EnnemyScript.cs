@@ -104,6 +104,7 @@ public class EnnemyScript : MonoBehaviour {
 
     void OnTriggerEnter(Collider collider)
     {
+		Debug.Log("monstre vs mur");
         if (collider.gameObject.name != "Player" && collider.gameObject.name == "Floor")
         {
             if (_currentDirection == "left")
@@ -111,7 +112,7 @@ public class EnnemyScript : MonoBehaviour {
                 changeDirection("right");
             }
             else if (_currentDirection == "right")
-            {
+            { 
                 changeDirection("left");
             }
         }

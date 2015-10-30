@@ -80,6 +80,8 @@ public class GameSystem : MonoBehaviour {
 	 * ***********************/
 
 	void playThemeSong() {
-		Audio.PlayOneShot(SongTheme, 1F);
+		Audio.loop = true;
+		Audio.clip = SongTheme;
+		Audio.Play();
 	}
 }
