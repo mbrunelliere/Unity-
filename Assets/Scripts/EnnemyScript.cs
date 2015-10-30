@@ -83,7 +83,7 @@ public class EnnemyScript : MonoBehaviour {
                 if(contact.normal == new Vector2(0, -1))
                 {
                     Debug.Log("Mort ennemi");
-                    die();
+                    GameOver(true);
                 }
                 else if (contact.normal == new Vector2(1, 0))
                 {
@@ -138,7 +138,7 @@ public class EnnemyScript : MonoBehaviour {
         }
     }
 
-    void die()
+    void GameOver(bool isDied)
     {
         //Change state 
         changeState(STATE_DIE);

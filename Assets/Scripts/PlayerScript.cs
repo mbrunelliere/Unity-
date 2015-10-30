@@ -14,6 +14,7 @@ public class PlayerScript : MonoBehaviour {
     Animator animator;
     AudioSource Audio;
     Bounds bounds;
+    SpriteRenderer renderer;
     GameObject map;
 	Rigidbody2D rigidbody;
 
@@ -36,12 +37,15 @@ public class PlayerScript : MonoBehaviour {
     int jewels = 0;
     UnityEngine.UI.Text jewelsTotalText;
 
+    Color tmpColor;
+
     // Use this for initialization
     void Start()
     {
         Audio = this.GetComponent<AudioSource>();
         animator = this.GetComponent<Animator>();
         map = GameObject.FindWithTag("Map");
+        renderer = this.GetComponent<SpriteRenderer>();
         bounds = map.GetComponent<Renderer>().bounds;
 		rigidbody = this.GetComponent<Rigidbody2D>();
 
@@ -90,7 +94,9 @@ public class PlayerScript : MonoBehaviour {
             if (_isGrounded)
             {
                 changeState(STATE_WALK);
-                Audio.PlayOneShot(walk, 0.5F);
+                Audio.clip = walk;
+                Audio.loop = false;
+                Audio.Play();
             }
 
         }
@@ -119,6 +125,7 @@ public class PlayerScript : MonoBehaviour {
 
         _isCrounching = animator.GetCurrentAnimatorStateInfo(0).IsName("Patch_duck");
         _isHurting = animator.GetCurrentAnimatorStateInfo(0).IsName("Patch_hurt");
+        isCollected = true;
     }
 
     void changeState(uint state)
@@ -153,12 +160,13 @@ public class PlayerScript : MonoBehaviour {
                 {
                     GetComponent<Rigidbody2D>().AddForce(new Vector2(50, 100));
                     changeState(STATE_HURT);
+                    GameObject.Find("lifesNumber").SendMessage("updateCounter", 1);
                 }
                 else if (contact.normal == new Vector2(-1, 0))
                 {
                     GetComponent<Rigidbody2D>().AddForce(new Vector2(-50, 100));
                     changeState(STATE_HURT);
-
+                    GameObject.Find("lifesNumber").SendMessage("updateCounter", 1);
                 }
 
                 else if (contact.normal == new Vector2(0, -1))
@@ -170,16 +178,13 @@ public class PlayerScript : MonoBehaviour {
             }
             if (coll.gameObject.name == "jewel") 
             {
+                Debug.Log(isCollected);
                 Destroy(coll.gameObject);
                 if(isCollected)
                 {
                     isCollected = false;
-                    updateJewelsTotal();
+                    GameObject.Find("itemsNumber").SendMessage("updateCounter", 1);
                 }
-            }
-            else
-            {
-                isCollected = true;
             }
         }
     }
@@ -202,9 +207,11 @@ public class PlayerScript : MonoBehaviour {
         }
     }
 
-    void updateJewelsTotal()
+    void GameOver(bool isDied)
     {
-        jewels++;
-        jewelsTotalText.text = "" + jewels + "";
+        // Animation to Alpha 0
+        tmpColor = renderer.color;
+        renderer.color = Color.Lerp(tmpColor, new Color(0f, 0f, 0f, 0f), Time.fixedDeltaTime * 20.0f);
     }
+
 } 
