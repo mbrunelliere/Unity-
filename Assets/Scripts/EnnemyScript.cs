@@ -3,7 +3,7 @@ using System.Collections;
 
 public class EnnemyScript : MonoBehaviour {
 
-    public float walkSpeed = 1;
+    public float walkSpeed = 100;
 
     const uint STATE_WALK = 1;
     const uint STATE_DIE = 2;
@@ -12,6 +12,7 @@ public class EnnemyScript : MonoBehaviour {
     SpriteRenderer renderer;
     Bounds bounds;
     GameObject map;
+	Rigidbody2D rigidbody;
     public AnimationClip Monster_die;
 
     uint _currentAnimationState = STATE_WALK;
@@ -25,6 +26,7 @@ public class EnnemyScript : MonoBehaviour {
         renderer = this.GetComponent<SpriteRenderer>();
         map = GameObject.FindWithTag("Map");
         bounds = map.GetComponent<Renderer>().bounds;
+		rigidbody = this.GetComponent<Rigidbody2D>();
     }
 	 
 	// Update is called once per frame
@@ -51,11 +53,11 @@ public class EnnemyScript : MonoBehaviour {
 
         if (_currentDirection == "left")
         {
-            transform.Translate(Vector3.left * walkSpeed * Time.fixedDeltaTime);
+			rigidbody.velocity = new Vector2(-walkSpeed * Time.fixedDeltaTime, rigidbody.velocity.y);
         }
         else if (_currentDirection == "right")
         {
-            transform.Translate(Vector3.right * walkSpeed * Time.fixedDeltaTime);
+			rigidbody.velocity = new Vector2(walkSpeed * Time.fixedDeltaTime, rigidbody.velocity.y);
         }
     }
 

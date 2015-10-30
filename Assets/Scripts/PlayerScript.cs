@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerScript : MonoBehaviour {
 
-    public float walkSpeed = 1;
+    public float walkSpeed = 100;
     public AudioClip walk; 
 
     bool _isGrounded = true;
@@ -15,6 +15,7 @@ public class PlayerScript : MonoBehaviour {
     AudioSource Audio;
     Bounds bounds;
     GameObject map;
+	Rigidbody2D rigidbody;
 
     const uint STATE_IDLE = 0;
     const uint STATE_WALK = 1;
@@ -39,6 +40,7 @@ public class PlayerScript : MonoBehaviour {
         animator = this.GetComponent<Animator>();
         map = GameObject.FindWithTag("Map");
         bounds = map.GetComponent<Renderer>().bounds;
+		rigidbody = this.GetComponent<Rigidbody2D>();
 
         jewelsTotalText = GameObject.Find("itemsNumber").GetComponent<UnityEngine.UI.Text>();
     }
@@ -80,8 +82,7 @@ public class PlayerScript : MonoBehaviour {
         else if (Input.GetKey(KeyCode.RightArrow) && !_isCrounching && !_isHurting)
         {
             changeDirection("right");
-            //GetComponent<Rigidbody2D>().velocity = Vector3.right * walkSpeed * Time.fixedDeltaTime;
-            transform.Translate(Vector3.right * walkSpeed * Time.fixedDeltaTime);
+			rigidbody.velocity = new Vector2(walkSpeed * Time.fixedDeltaTime, rigidbody.velocity.y);
 
             if (_isGrounded)
             {
@@ -93,8 +94,7 @@ public class PlayerScript : MonoBehaviour {
         else if (Input.GetKey(KeyCode.LeftArrow) && !_isCrounching && !_isHurting)
         {
             changeDirection("left");
-            //GetComponent<Rigidbody2D>().velocity = Vector3.right * walkSpeed * Time.fixedDeltaTime;
-            transform.Translate(Vector3.left * walkSpeed * Time.fixedDeltaTime);
+            rigidbody.velocity = new Vector2(-walkSpeed * Time.fixedDeltaTime, rigidbody.velocity.y);
 
             if (_isGrounded)
             {
